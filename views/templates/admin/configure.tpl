@@ -52,7 +52,7 @@
       <label class="cb-step-label" for="cb-id">1. {l s='Paste your Chatbot ID' mod='conferbot'}</label>
       <div class="cb-step-help">
         {l s='Find it in your' mod='conferbot'} <a href="https://app.conferbot.com" target="_blank" rel="noopener">{l s='Conferbot dashboard' mod='conferbot'}</a>:
-        {l s='open your bot, click "Share", then "Copy Bot ID". Pasting the whole code snippet also works — we will find the ID for you.' mod='conferbot'}
+        {l s='open your bot, click "Share", then "Copy Bot ID". Pasting the whole code snippet also works - we will find the ID for you.' mod='conferbot'}
       </div>
       <input class="cb-input" type="text" id="cb-id" name="CONFERBOT_CHATBOT_ID"
              value="{$cb_chatbot_id|escape:'html':'UTF-8'}"
@@ -69,11 +69,11 @@
     </div>
 
     <button class="cb-save" type="submit" name="submitconferbot" value="1">
-      {l s='Save — start chatting with my customers' mod='conferbot'} 🎉
+      {l s='Save - start chatting with my customers' mod='conferbot'} 🎉
     </button>
 
     <details class="cb-advanced">
-      <summary>{l s='Advanced settings (optional — the defaults are fine)' mod='conferbot'}</summary>
+      <summary>{l s='Advanced settings (optional - the defaults are fine)' mod='conferbot'}</summary>
       <div class="cb-adv-body">
         <div class="cb-adv-row">
           <label class="cb-adv-label" for="cb-embed">{l s='How the chat appears' mod='conferbot'}</label>

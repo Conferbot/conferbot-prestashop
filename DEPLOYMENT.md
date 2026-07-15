@@ -8,7 +8,7 @@ A single installable zip (`conferbot-prestashop-v1.1.0.zip`) whose top-level dir
 
 - A Conferbot bot that is **published and not disabled**; copy its Bot ID (24-char hex) from **Share > Embed into website**.
 - PrestaShop 1.7 or 8.x, PHP 7.2+.
-- The store's domain must NOT be listed in the bot's **Customize > Advanced > Disabled URLs** (there is no domain whitelist — any origin may embed a bot; disabled URLs is the only suppression mechanism).
+- The store's domain must NOT be listed in the bot's **Customize > Advanced > Disabled URLs** (there is no domain whitelist - any origin may embed a bot; disabled URLs is the only suppression mechanism).
 
 ## Building the zip
 
@@ -56,7 +56,7 @@ php bin/console cache:clear
 
 ## Versioning / upgrades
 
-Bump `$this->version` in `conferbot.php` AND `<version>` in `config.xml` together. PrestaShop runs upgrade scripts from an `upgrade/` directory (`upgrade-X.Y.Z.php`) when the installed version is older — add these when a future version changes configuration keys. Uninstall removes all `CONFERBOT_*` configuration keys (including legacy 1.0.x keys).
+Bump `$this->version` in `conferbot.php` AND `<version>` in `config.xml` together. PrestaShop runs upgrade scripts from an `upgrade/` directory (`upgrade-X.Y.Z.php`) when the installed version is older - add these when a future version changes configuration keys. Uninstall removes all `CONFERBOT_*` configuration keys (including legacy 1.0.x keys).
 
 ## Explicitly out of scope in v1.1.0
 

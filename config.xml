@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>conferbot</name>
-    <displayName><![CDATA[Conferbot — AI Chatbot, Live Chat & Customer Support]]></displayName>
+    <displayName><![CDATA[Conferbot - AI Chatbot, Live Chat & Customer Support]]></displayName>
     <version><![CDATA[1.1.0]]></version>
-    <description><![CDATA[Turn visitors into customers with an AI chatbot and live chat widget. Automate 24/7 customer support, capture leads, answer product questions, and hand over to human agents — set up in under a minute with no code.]]></description>
+    <description><![CDATA[Turn visitors into customers with an AI chatbot and live chat widget. Automate 24/7 customer support, capture leads, answer product questions, and hand over to human agents - set up in under a minute with no code.]]></description>
     <author><![CDATA[Conferbot]]></author>
     <tab><![CDATA[front_office_features]]></tab>
     <confirmUninstall><![CDATA[Are you sure you want to uninstall Conferbot? Module configuration will be removed.]]></confirmUninstall>

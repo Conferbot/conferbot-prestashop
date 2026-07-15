@@ -1,6 +1,6 @@
 <?php
 /**
- * Conferbot Live Chat — PrestaShop module
+ * Conferbot Live Chat - PrestaShop module
  *
  * Embeds the Conferbot AI chat widget on a PrestaShop 1.7/8.x storefront.
  * The widget is identified by the Chatbot ID only (the bot's ID shown in the
@@ -37,8 +37,8 @@ class Conferbot extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Conferbot — AI Chatbot, Live Chat & Customer Support');
-        $this->description = $this->l('Turn visitors into customers with an AI chatbot and live chat widget. Automate 24/7 customer support, capture leads, answer product questions, and hand over to human agents — set up in under a minute with no code.');
+        $this->displayName = $this->l('Conferbot - AI Chatbot, Live Chat & Customer Support');
+        $this->description = $this->l('Turn visitors into customers with an AI chatbot and live chat widget. Automate 24/7 customer support, capture leads, answer product questions, and hand over to human agents - set up in under a minute with no code.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall Conferbot? Module configuration will be removed.');
 
         if (!Configuration::get('CONFERBOT_CHATBOT_ID')) {
@@ -164,10 +164,10 @@ class Conferbot extends Module
         }
 
         if ($enabled && $chatbotId !== '') {
-            return $this->displayConfirmation($this->l('Saved! The chat is now live — open your store to say hello to it.'));
+            return $this->displayConfirmation($this->l('Saved! The chat is now live - open your store to say hello to it.'));
         }
 
-        return $this->displayConfirmation($this->l('Saved. The chat is switched off for now — turn it on whenever you are ready.'));
+        return $this->displayConfirmation($this->l('Saved. The chat is switched off for now - turn it on whenever you are ready.'));
     }
 
     public function hookDisplayHeader($params)

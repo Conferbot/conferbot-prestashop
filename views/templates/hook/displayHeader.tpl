@@ -1,4 +1,4 @@
-{* Conferbot widget loader — canonical snippet from the Conferbot dashboard,
+{* Conferbot widget loader - canonical snippet from the Conferbot dashboard,
    with customer/store context passed as the third ConferbotWidget argument. *}
 <script type="text/javascript">
   (function (d, s, id) {

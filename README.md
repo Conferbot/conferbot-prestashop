@@ -17,7 +17,7 @@ The module hooks `displayHeader` and injects the standard Conferbot loader snipp
 </script>
 ```
 
-The only credential needed is the **Chatbot ID** (the bot's ID from the Conferbot dashboard). All widget appearance and behavior — position, colors, theme, language, auto-open, proactive prompts, disabled URLs — is configured in the Conferbot dashboard under **Customize** and delivered to the widget at runtime; the module does not duplicate those settings.
+The only credential needed is the **Chatbot ID** (the bot's ID from the Conferbot dashboard). All widget appearance and behavior - position, colors, theme, language, auto-open, proactive prompts, disabled URLs - is configured in the Conferbot dashboard under **Customize** and delivered to the widget at runtime; the module does not duplicate those settings.
 
 `options.user` and `options.customData` become the visitor's identity/context in Conferbot chats, so the bot and human agents see the customer's name, email, cart total, and store details.
 
@@ -47,12 +47,12 @@ The only credential needed is the **Chatbot ID** (the bot's ID from the Conferbo
 ## Testing
 
 1. Save the configuration with a valid Chatbot ID.
-2. Open the storefront — the chat bubble should appear (subject to the bot's own dashboard settings such as disabled URLs and load delay).
+2. Open the storefront - the chat bubble should appear (subject to the bot's own dashboard settings such as disabled URLs and load delay).
 3. Log in as a customer and start a chat: the conversation in the Conferbot inbox should show the customer's name/email and cart context.
 
 ## Notes & limitations
 
-- No API key or workspace ID is required — the widget resolves everything server-side from the Chatbot ID over Socket.IO (`wdt.conferbot.com`).
+- No API key or workspace ID is required - the widget resolves everything server-side from the Chatbot ID over Socket.IO (`wdt.conferbot.com`).
 - Outbound webhooks (order status, product updates, abandoned cart) are **not** part of this version; the Conferbot backend does not yet expose PrestaShop webhook endpoints. See `server/docs/integrations/prestashop-integration-guide.md` for the roadmap.
 - If the widget does not appear: check the module is enabled, the Chatbot ID is correct and the bot is published/not disabled, the current page type is enabled in **Show on Pages**, and clear the PrestaShop cache (**Advanced Parameters > Performance > Clear cache**).
 
