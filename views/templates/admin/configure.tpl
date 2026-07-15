@@ -31,6 +31,8 @@
   .cb-pages input { width: 18px; height: 18px; }
   .cb-select, .cb-adv-input { font-size: 15px; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; width: 100%; max-width: 420px; }
   .cb-verify { margin-top: 18px; text-align: center; color: #6b7280; }
+  .cb-demo { margin-top: 8px; color: #6b7280; font-size: 14px; }
+  .cb-demo a { font-weight: 600; }
 </style>
 
 <div class="cb-panel">
@@ -57,6 +59,11 @@
       <input class="cb-input" type="text" id="cb-id" name="CONFERBOT_CHATBOT_ID"
              value="{$cb_chatbot_id|escape:'html':'UTF-8'}"
              placeholder="{l s='e.g. 64a1b2c3d4e5f6a7b8c9d0e1' mod='conferbot'}">
+      <div class="cb-demo">
+        {l s='No account yet?' mod='conferbot'}
+        <a href="#" id="cb-use-demo" data-demo-id="{$cb_demo_bot_id|escape:'html':'UTF-8'}">{l s='Try our demo bot' mod='conferbot'}</a>
+        {l s='- it works right away, no signup needed.' mod='conferbot'}
+      </div>
     </div>
 
     <div class="cb-step">
@@ -105,3 +112,14 @@
     {l s='Need help? Write to' mod='conferbot'} <a href="mailto:support@conferbot.com">support@conferbot.com</a>
   </p>
 </div>
+
+<script type="text/javascript">
+  document.getElementById('cb-use-demo').addEventListener('click', function (e) {
+    e.preventDefault();
+    var input = document.getElementById('cb-id');
+    input.value = this.getAttribute('data-demo-id');
+    var toggle = document.querySelector('.cb-switch input');
+    if (toggle) { toggle.checked = true; }
+    input.focus();
+  });
+</script>
