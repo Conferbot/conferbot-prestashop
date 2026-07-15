@@ -2,6 +2,14 @@
 
 Embeds the [Conferbot](https://conferbot.com) AI chat widget on a PrestaShop store and passes the logged-in customer identity plus store/cart context to the bot.
 
+## See it in action
+
+Paste the Chatbot ID, flip the switch, and the bot is live on the storefront - 30 seconds end to end:
+
+![Conferbot PrestaShop demo: paste the bot ID, save, chat appears on the store](docs/demo.gif)
+
+[HD video (MP4)](docs/demo.mp4) - also attached to the [latest release](https://github.com/Conferbot/conferbot-prestashop/releases).
+
 ## How it works
 
 The module hooks `displayHeader` and injects the standard Conferbot loader snippet:
