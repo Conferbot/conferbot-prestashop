@@ -25,7 +25,7 @@ The only credential needed is the **Chatbot ID** (the bot's ID from the Conferbo
 
 - PrestaShop 1.7 or 8.x
 - PHP 7.2+
-- A Conferbot account with a published chatbot
+- A Conferbot account with a published chatbot (or use the built-in demo bot to try it first)
 
 ## Installation
 
@@ -36,17 +36,59 @@ The only credential needed is the **Chatbot ID** (the bot's ID from the Conferbo
 
 ## Configuration
 
+The configure screen is two steps: paste your Chatbot ID, flip the switch, save. You can paste the bare ID, the full embed snippet, or a dashboard URL - the module extracts the ID for you.
+
+**No account yet?** Click "Try our demo bot" on the configure screen. It fills in the public demo bot (`691c970890527a0468f9b2c9`), which works out of the box so you can see the widget live before signing up.
+
 | Setting | Description |
 |---|---|
-| Enable Conferbot | Master on/off switch. |
 | Chatbot ID | Required. In the Conferbot dashboard open your bot, go to **Share > Embed into website**, and copy the Bot ID (24-character hex). |
-| Display Type | `Widget (floating bubble)` or `Popup`. |
-| Show on Pages | Per-page-type visibility: home, category/search, product, cart, checkout, customer account, and all other pages. |
-| Widget Script URL | Advanced. Leave empty for the Conferbot CDN default. Useful for staging/self-hosted widget builds. |
+| Turn the chat on | Master on/off switch. |
+| How the chat appears | Floating chat bubble (default) or popup window. *(Advanced)* |
+| Show on these pages | Per-page-type visibility: home, category/search, product, cart, checkout, customer account, all other pages. *(Advanced)* |
+| Widget script URL | Leave as is for the Conferbot CDN. Useful for staging/self-hosted widget builds. *(Advanced)* |
 
-## Testing
+## Architecture
 
-1. Save the configuration with a valid Chatbot ID.
+The module class only wires PrestaShop hooks and the configure screen; the logic lives in small, individually tested classes:
+
+```
+modules/conferbot/
+├── conferbot.php                        # Module: hooks + configure screen wiring
+├── classes/
+│   ├── ConferbotBotId.php               # Bot ID extraction/validation + demo bot ID
+│   ├── ConferbotPageResolver.php        # Controller -> page type map + visibility rules
+│   ├── ConferbotWidgetContext.php       # Builds ConferbotWidget() options + safe JSON
+│   └── ConferbotSettings.php            # Configuration keys, defaults, persistence
+├── views/templates/
+│   ├── admin/configure.tpl              # Two-step configure UI
+│   └── hook/displayHeader.tpl           # Widget loader snippet
+├── tests/                               # PHPUnit suite (not shipped in the zip)
+├── phpunit.xml
+├── logo.png
+├── config.xml
+├── DEPLOYMENT.md                        # Packaging, install, verification
+└── MARKETPLACE.md                       # PrestaShop Addons listing kit
+```
+
+Adding a setting is a one-file change in `ConferbotSettings` plus a form field in `configure.tpl`; adding a page type is one entry in `ConferbotPageResolver`.
+
+## Tests
+
+73 PHPUnit tests (155 assertions) cover bot ID parsing, controller-to-page-type mapping, visibility rules, widget option building (guest/customer/cart variants), script-injection safety of the inlined JSON, and settings persistence including legacy-key cleanup. The suite runs without a PrestaShop installation - `tests/bootstrap.php` stubs `Configuration`.
+
+```bash
+# any PHP 7.2+ with phpunit 9:
+phpunit
+
+# or containerized:
+docker run --rm -v "$PWD":/mod -v /path/to/phpunit-9.phar:/phpunit.phar:ro \
+  -w /mod php:8.2-cli php /phpunit.phar
+```
+
+## Manual verification
+
+1. Save the configuration with a valid Chatbot ID (or the demo bot).
 2. Open the storefront - the chat bubble should appear (subject to the bot's own dashboard settings such as disabled URLs and load delay).
 3. Log in as a customer and start a chat: the conversation in the Conferbot inbox should show the customer's name/email and cart context.
 
@@ -54,18 +96,7 @@ The only credential needed is the **Chatbot ID** (the bot's ID from the Conferbo
 
 - No API key or workspace ID is required - the widget resolves everything server-side from the Chatbot ID over Socket.IO (`wdt.conferbot.com`).
 - Outbound webhooks (order status, product updates, abandoned cart) are **not** part of this version; the Conferbot backend does not yet expose PrestaShop webhook endpoints. See `server/docs/integrations/prestashop-integration-guide.md` for the roadmap.
-- If the widget does not appear: check the module is enabled, the Chatbot ID is correct and the bot is published/not disabled, the current page type is enabled in **Show on Pages**, and clear the PrestaShop cache (**Advanced Parameters > Performance > Clear cache**).
-
-## File structure
-
-```
-modules/conferbot/
-├── conferbot.php        # Module class (config form + displayHeader hook)
-├── config.xml           # Module metadata
-├── index.php            # Security stub (also in every subdirectory)
-├── README.md
-└── views/templates/hook/displayHeader.tpl   # Loader snippet template
-```
+- If the widget does not appear: check the module is enabled, the Chatbot ID is correct and the bot is published/not disabled, the current page type is enabled in **Show on these pages**, and clear the PrestaShop cache (**Advanced Parameters > Performance > Clear cache**).
 
 ## License
 
