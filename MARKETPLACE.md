@@ -23,7 +23,8 @@ Covers the three highest-volume search terms merchants type: "chatbot", "live ch
 - 🤖 **AI chatbot that sells** - answers product and order questions instantly, 24/7, in your customers' language
 - 💬 **Real live chat** - seamless handover from bot to your human agents when it matters
 - 🎯 **Lead capture** - collect emails and qualify visitors automatically, even while you sleep
-- 🛒 **E-commerce aware** - the bot sees the visitor's name, email and cart value for logged-in customers, so conversations convert
+- 🛒 **E-commerce aware** - the bot sees the visitor's name, email and cart value for logged-in customers, so conversations convert, and orders are credited to the chats that led to them
+- 🔐 **Identity verification** - optionally sign logged-in customers so Conferbot can trust who they are
 - ⚡ **1-minute setup, zero code** - paste one ID, flip a switch, done
 - 🎨 **Fully brandable** - design the widget (colors, logo, position, welcome messages) in the Conferbot dashboard, no theme edits
 - 📱 **Works everywhere** - desktop, mobile, every PrestaShop 1.7 & 8.x theme
