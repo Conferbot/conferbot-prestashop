@@ -101,6 +101,14 @@
           </div>
         </div>
         <div class="cb-adv-row">
+          <label class="cb-adv-label" for="cb-identity">{l s='Identity verification secret (optional - from Conferbot workspace settings > Security > Identity verification; lets Conferbot trust your logged-in customers\' names and emails)' mod='conferbot'}</label>
+          <input class="cb-adv-input" type="password" id="cb-identity" name="CONFERBOT_IDENTITY_SECRET" autocomplete="new-password" value=""
+            placeholder="{if $cb_identity_secret_saved}{l s='Saved - paste a new one to replace it' mod='conferbot'}{else}{l s='Paste your secret' mod='conferbot'}{/if}">
+          {if $cb_identity_secret_saved}
+            <label><input type="checkbox" name="CONFERBOT_IDENTITY_SECRET_CLEAR" value="1"> {l s='Remove the saved secret' mod='conferbot'}</label>
+          {/if}
+        </div>
+        <div class="cb-adv-row">
           <label class="cb-adv-label" for="cb-script">{l s='Widget script URL (leave as is unless Conferbot support says otherwise)' mod='conferbot'}</label>
           <input class="cb-adv-input" type="text" id="cb-script" name="CONFERBOT_SCRIPT_URL" value="{$cb_script_url|escape:'html':'UTF-8'}">
         </div>
