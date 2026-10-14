@@ -9,7 +9,7 @@
     js.src = '{$conferbot_script_url|escape:'javascript':'UTF-8'}';
     js.id = id;
     js.charset = 'UTF-8';
-    el.parentNode.insertBefore(js, el);
+    if (el && el.parentNode) { el.parentNode.insertBefore(js, el); } else { d.head.appendChild(js); }
     js.onload = function () {
       var options = {$conferbot_options_json nofilter};
       window.ConferbotWidget(
@@ -17,6 +17,21 @@
         '{$conferbot_embed_type|escape:'javascript':'UTF-8'}',
         options
       );
+      // What the visitor did, for Conferbot's "chats that led to a sale":
+      // the order on the confirmation page (once per order) and cart changes.
+      var events = {$conferbot_events_json nofilter};
+      events.forEach(function (e) {
+        try {
+          if (e.once) {
+            if (sessionStorage.getItem('cb-track-' + e.once)) return;
+            sessionStorage.setItem('cb-track-' + e.once, '1');
+          }
+        } catch (err) {}
+        window.ConferbotWidget.track(e.name, e.props || {});
+      });
+      if (window.prestashop && typeof window.prestashop.on === 'function') {
+        window.prestashop.on('updateCart', function () { window.ConferbotWidget.track('cart_updated'); });
+      }
     };
   })(document, 'script', 'conferbot-js');
 </script>
