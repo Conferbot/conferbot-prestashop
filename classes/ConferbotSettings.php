@@ -21,6 +21,7 @@ class ConferbotSettings
     const KEY_EMBED_TYPE = 'CONFERBOT_EMBED_TYPE';
     const KEY_SCRIPT_URL = 'CONFERBOT_SCRIPT_URL';
     const KEY_PAGE_PREFIX = 'CONFERBOT_SHOW_ON_PAGES_';
+    const KEY_IDENTITY_SECRET = 'CONFERBOT_IDENTITY_SECRET';
 
     /** @var array embed types the widget loader accepts from this module */
     public static $embedTypes = array('live_chat', 'popup_chat');
@@ -58,6 +59,31 @@ class ConferbotSettings
         return Configuration::get(self::KEY_SCRIPT_URL) ?: self::DEFAULT_SCRIPT_URL;
     }
 
+    /** The workspace's identity verification secret ('' = off). Never sent to the browser. */
+    public static function getIdentitySecret()
+    {
+        return (string) (Configuration::get(self::KEY_IDENTITY_SECRET) ?: '');
+    }
+
+    /**
+     * Write-only: a blank field keeps the saved secret, "remove" clears it.
+     *
+     * @param string $current
+     * @param string $submitted
+     * @param bool $clear
+     *
+     * @return string
+     */
+    public static function nextIdentitySecret($current, $submitted, $clear)
+    {
+        if ($clear) {
+            return '';
+        }
+        $submitted = trim((string) $submitted);
+
+        return $submitted !== '' ? $submitted : (string) $current;
+    }
+
     /**
      * @return array pageType => stored raw value (false when never saved)
      */
@@ -80,6 +106,9 @@ class ConferbotSettings
         Configuration::updateValue(self::KEY_CHATBOT_ID, $values['chatbotId']);
         Configuration::updateValue(self::KEY_EMBED_TYPE, $values['embedType']);
         Configuration::updateValue(self::KEY_SCRIPT_URL, $values['scriptUrl']);
+        if (array_key_exists('identitySecret', $values)) {
+            Configuration::updateValue(self::KEY_IDENTITY_SECRET, (string) $values['identitySecret']);
+        }
         foreach ($values['pages'] as $page => $visible) {
             Configuration::updateValue(self::KEY_PAGE_PREFIX . $page, (int) $visible);
         }
@@ -88,7 +117,7 @@ class ConferbotSettings
     public static function deleteAll()
     {
         $keys = array_merge(
-            array(self::KEY_ENABLED, self::KEY_CHATBOT_ID, self::KEY_EMBED_TYPE, self::KEY_SCRIPT_URL),
+            array(self::KEY_ENABLED, self::KEY_CHATBOT_ID, self::KEY_EMBED_TYPE, self::KEY_SCRIPT_URL, self::KEY_IDENTITY_SECRET),
             self::$legacyKeys
         );
         foreach (ConferbotPageResolver::PAGE_TYPES as $page) {
