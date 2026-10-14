@@ -2,11 +2,11 @@
 
 ## What gets deployed
 
-A single installable zip (`conferbot-prestashop-v1.1.0.zip`) whose top-level directory is `conferbot/`. No backend changes are required: the module only injects the public widget loader (`https://cdn.conferbot.com/dist/v1/widget.min.js`) and calls `window.ConferbotWidget(botId, embedType, options)`. The widget then talks to the production embed-server (`wdt.conferbot.com`) over Socket.IO, exactly like the snippet from the dashboard's **Share > Embed into website** page.
+A single installable zip (`conferbot-prestashop-v1.3.0.zip`) whose top-level directory is `conferbot/`. No backend changes are required: the module only injects the public widget loader (`https://cdn.conferbot.com/dist/v1/widget.min.js`) and calls `window.ConferbotWidget(botId, embedType, options)`. The widget then talks to the production embed-server (`wdt.conferbot.com`) over Socket.IO, exactly like the snippet from the dashboard's **Share > Embed into website** page.
 
 ## Prerequisites
 
-- A Conferbot bot that is **published and not disabled**; copy its Bot ID (24-char hex) from **Share > Embed into website**.
+- A Conferbot bot that is **published and not disabled**; copy its embed code from **Share > Embed** (the module finds the 24-char Bot ID in it).
 - PrestaShop 1.7 or 8.x, PHP 7.2+.
 - The store's domain must NOT be listed in the bot's **Customize > Advanced > Disabled URLs** (there is no domain whitelist - any origin may embed a bot; disabled URLs is the only suppression mechanism).
 
@@ -15,7 +15,7 @@ A single installable zip (`conferbot-prestashop-v1.1.0.zip`) whose top-level dir
 ```bash
 cd /path/to/dev
 mkdir -p /tmp/pkg && cp -r prestashop-module /tmp/pkg/conferbot
-cd /tmp/pkg && zip -r conferbot-prestashop-v1.1.0.zip conferbot
+cd /tmp/pkg && zip -r conferbot-prestashop-v1.3.0.zip conferbot
 ```
 
 The zip must contain `conferbot/` as its only top-level entry (PrestaShop derives the module name from it).
@@ -30,7 +30,7 @@ The zip must contain `conferbot/` as its only top-level entry (PrestaShop derive
 
 **Via CLI (for hosted/managed stores):**
 ```bash
-unzip conferbot-prestashop-v1.1.0.zip -d /var/www/html/modules/
+unzip conferbot-prestashop-v1.3.0.zip -d /var/www/html/modules/
 chown -R www-data:www-data /var/www/html/modules/conferbot
 php bin/console prestashop:module install conferbot
 # set config non-interactively if desired:
@@ -56,9 +56,9 @@ php bin/console cache:clear
 
 ## Versioning / upgrades
 
-Bump `$this->version` in `conferbot.php` AND `<version>` in `config.xml` together. PrestaShop runs upgrade scripts from an `upgrade/` directory (`upgrade-X.Y.Z.php`) when the installed version is older - add these when a future version changes configuration keys. Uninstall removes all `CONFERBOT_*` configuration keys (including legacy 1.0.x keys).
+Bump `$this->version` in `conferbot.php` AND `<version>` in `config.xml` together. PrestaShop runs upgrade scripts from the `upgrade/` directory (`upgrade-X.Y.Z.php`) when the installed version is older. `upgrade-1.3.0.php` removes the legacy 1.0.x keys and makes sure `displayHeader` is registered, so an in-place upgrade keeps the chat (verified on 8.2: 1.2.0 to 1.3.0 with a leftover 1.0.x key and no hook). Uninstall removes all `CONFERBOT_*` configuration keys (including legacy 1.0.x keys).
 
-## Explicitly out of scope in v1.1.0
+## Explicitly out of scope in v1.3.0
 
 - **Outbound webhooks** (order status, abandoned cart, product sync): the Conferbot backend has no PrestaShop endpoints yet (`server/docs/integrations/prestashop-integration-guide.md` is a design doc only). Do not re-add the v1.0.0 webhook code until routes exist under the embed-server/server.
 - **API-key features** (product search, order lookup from chat): would require new module front controllers plus bot flow nodes; roadmap item.
