@@ -31,7 +31,7 @@ class Conferbot extends Module
     {
         $this->name = 'conferbot';
         $this->tab = 'front_office_features';
-        $this->version = '1.2.0';
+        $this->version = '1.3.0';
         $this->author = 'Conferbot';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
@@ -85,7 +85,7 @@ class Conferbot extends Module
         $enabled = (int) (bool) Tools::getValue(ConferbotSettings::KEY_ENABLED);
 
         if ($chatbotId === '' && trim($pasted) !== '') {
-            return $this->displayError($this->l('We could not find a Chatbot ID in what you pasted. It looks like a 24-character code, e.g. 64a1b2c3d4e5f6a7b8c9d0e1. In your Conferbot dashboard, open your bot, click "Share", then "Copy Bot ID".'));
+            return $this->displayError($this->l('We could not find a Chatbot ID in what you pasted. It looks like a 24-character code, e.g. 64a1b2c3d4e5f6a7b8c9d0e1. In your Conferbot dashboard, open your bot, go to Share > Embed and copy the code; we find the ID in it.'));
         }
         if ($chatbotId === '' && $enabled) {
             return $this->displayError($this->l('Please paste your Chatbot ID first (step 1), then turn the chat on.'));
@@ -115,6 +115,11 @@ class Conferbot extends Module
             'embedType' => $embedType,
             'scriptUrl' => $scriptUrl,
             'pages' => $pages,
+            'identitySecret' => ConferbotSettings::nextIdentitySecret(
+                ConferbotSettings::getIdentitySecret(),
+                (string) Tools::getValue(ConferbotSettings::KEY_IDENTITY_SECRET),
+                (bool) Tools::getValue('CONFERBOT_IDENTITY_SECRET_CLEAR')
+            ),
         ));
 
         if ($enabled && $chatbotId !== '') {
@@ -154,6 +159,7 @@ class Conferbot extends Module
             'cb_embed_type' => ConferbotSettings::getEmbedType(),
             'cb_script_url' => ConferbotSettings::getScriptUrl(),
             'cb_pages' => $pages,
+            'cb_identity_secret_saved' => ConferbotSettings::getIdentitySecret() !== '',
             'cb_shop_url' => $this->context->shop->getBaseURL(true),
             'cb_logo' => $this->getPathUri() . 'logo.png',
             'cb_demo_bot_id' => ConferbotBotId::DEMO_BOT_ID,
@@ -188,6 +194,7 @@ class Conferbot extends Module
             'conferbot_bot_id' => $chatbotId,
             'conferbot_embed_type' => ConferbotSettings::getEmbedType(),
             'conferbot_options_json' => ConferbotWidgetContext::toJson($this->buildWidgetOptions()),
+            'conferbot_events_json' => ConferbotWidgetContext::toJson(ConferbotWidgetContext::events($this->confirmedOrder())),
         ));
 
         return $this->display(__FILE__, 'views/templates/hook/displayHeader.tpl');
@@ -224,6 +231,33 @@ class Conferbot extends Module
             }
         }
 
-        return ConferbotWidgetContext::build($store, $this->version, $customer, $cart);
+        return ConferbotWidgetContext::build($store, $this->version, $customer, $cart, ConferbotSettings::getIdentitySecret());
+    }
+
+    /**
+     * The order on the confirmation page, when it is the logged-in (or guest
+     * checkout) customer's own; null anywhere else.
+     */
+    private function confirmedOrder()
+    {
+        $controller = $this->context->controller;
+        if (!$controller || !isset($controller->php_self) || $controller->php_self !== 'order-confirmation') {
+            return null;
+        }
+        $order = new Order((int) Tools::getValue('id_order'));
+        if (!Validate::isLoadedObject($order)) {
+            return null;
+        }
+        if (!$this->context->customer || (int) $order->id_customer !== (int) $this->context->customer->id) {
+            return null;
+        }
+        $currency = new Currency((int) $order->id_currency);
+
+        return array(
+            'id' => (int) $order->id,
+            'reference' => (string) $order->reference,
+            'total' => (float) $order->total_paid,
+            'currency' => Validate::isLoadedObject($currency) ? (string) $currency->iso_code : '',
+        );
     }
 }
