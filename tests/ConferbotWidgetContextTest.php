@@ -174,4 +174,35 @@ class ConferbotWidgetContextTest extends TestCase
 
         $this->assertSame('Boutique Chloé 中文 🛍️', $decoded['customData']['storeName']);
     }
+
+    // ---- identity verification and tracking ----------------------------
+
+    public function testLoggedInCustomerIsSignedWithTheWorkspaceSecret()
+    {
+        $customer = array('id' => 42, 'firstname' => 'Jane', 'lastname' => 'Doe', 'email' => 'jane@example.com');
+        $options = ConferbotWidgetContext::build($this->store, '1.3.0', $customer, null, 's3cret');
+        $this->assertSame(hash_hmac('sha256', 'ps-42', 's3cret'), $options['user']['hash']);
+        $plain = ConferbotWidgetContext::build($this->store, '1.3.0', $customer);
+        $this->assertArrayNotHasKey('hash', $plain['user']);
+        $this->assertStringNotContainsString('s3cret', ConferbotWidgetContext::toJson($options));
+    }
+
+    public function testSecretIsWriteOnly()
+    {
+        $this->assertSame('old', ConferbotSettings::nextIdentitySecret('old', '  ', false));
+        $this->assertSame('new', ConferbotSettings::nextIdentitySecret('old', ' new ', false));
+        $this->assertSame('', ConferbotSettings::nextIdentitySecret('old', 'new', true));
+    }
+
+    public function testConfirmedOrderIsAPurchaseOncePerOrder()
+    {
+        $events = ConferbotWidgetContext::events(array('id' => 17, 'reference' => 'XKBKNABJK', 'total' => 49.5, 'currency' => 'EUR'));
+        $this->assertSame(array(array(
+            'name' => 'purchase',
+            'props' => array('value' => 49.5, 'currency' => 'EUR', 'order_id' => 'XKBKNABJK'),
+            'once' => 'order-17',
+        )), $events);
+        $this->assertSame(array(), ConferbotWidgetContext::events(null));
+        $this->assertSame('[]', ConferbotWidgetContext::toJson(ConferbotWidgetContext::events(null)));
+    }
 }
