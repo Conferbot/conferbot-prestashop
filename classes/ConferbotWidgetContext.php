@@ -21,10 +21,11 @@ class ConferbotWidgetContext
      * @param string $moduleVersion
      * @param array|null $customer keys: id, firstname, lastname, email (null = guest)
      * @param array|null $cart keys: total, itemCount (null = no loaded cart)
+     * @param string $secret the workspace's identity verification secret ('' = off)
      *
      * @return array widget options
      */
-    public static function build(array $store, $moduleVersion, $customer = null, $cart = null)
+    public static function build(array $store, $moduleVersion, $customer = null, $cart = null, $secret = '')
     {
         $options = array('customData' => array(
             'platform' => 'prestashop',
@@ -46,6 +47,11 @@ class ConferbotWidgetContext
                 'name' => $name,
                 'email' => isset($customer['email']) ? (string) $customer['email'] : '',
             );
+            // Identity verification: the id signed with the workspace secret,
+            // so Conferbot knows this is the store's own logged-in customer.
+            if ((string) $secret !== '') {
+                $options['user']['hash'] = self::userHash($options['user']['id'], $secret);
+            }
         }
 
         if (is_array($cart)) {
@@ -61,6 +67,43 @@ class ConferbotWidgetContext
     }
 
     /**
+     * HMAC-SHA256 of the signed value (the customer id) with the secret, hex - as Conferbot checks it.
+     *
+     * @param string $value
+     * @param string $secret
+     *
+     * @return string
+     */
+    public static function userHash($value, $secret)
+    {
+        return hash_hmac('sha256', (string) $value, (string) $secret);
+    }
+
+    /**
+     * The order on the confirmation page as a purchase, reported once per order.
+     *
+     * @param array|null $order keys: id, reference, total, currency (null = not that page)
+     *
+     * @return array events for the template: name, props, once
+     */
+    public static function events($order)
+    {
+        if (!is_array($order) || empty($order['id'])) {
+            return array();
+        }
+
+        return array(array(
+            'name' => 'purchase',
+            'props' => array(
+                'value' => (float) $order['total'],
+                'currency' => (string) $order['currency'],
+                'order_id' => (string) (isset($order['reference']) && $order['reference'] !== '' ? $order['reference'] : $order['id']),
+            ),
+            'once' => 'order-' . (int) $order['id'],
+        ));
+    }
+
+    /**
      * JSON safe to inline inside a <script> block: JSON_HEX_* neutralize
      * user-controlled values (customer name/email) in the HTML context.
      *
@@ -68,7 +111,7 @@ class ConferbotWidgetContext
      *
      * @return string
      */
-    public static function toJson(array $options)
+    public static function toJson($options)
     {
         return json_encode($options, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
     }
