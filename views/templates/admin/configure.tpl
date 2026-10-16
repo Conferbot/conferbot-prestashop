@@ -54,7 +54,7 @@
       <label class="cb-step-label" for="cb-id">1. {l s='Paste your Chatbot ID' mod='conferbot'}</label>
       <div class="cb-step-help">
         {l s='Find it in your' mod='conferbot'} <a href="https://app.conferbot.com" target="_blank" rel="noopener">{l s='Conferbot dashboard' mod='conferbot'}</a>:
-        {l s='open your bot, click "Share", then "Copy Bot ID". Pasting the whole code snippet also works - we will find the ID for you.' mod='conferbot'}
+        {l s='open your bot, click "Share", then "Embed into your website" and copy the code - we will find the ID in it. The ID is also in the address bar: .../chatbot/<ID>/embed.' mod='conferbot'}
       </div>
       <input class="cb-input" type="text" id="cb-id" name="CONFERBOT_CHATBOT_ID"
              value="{$cb_chatbot_id|escape:'html':'UTF-8'}"
