@@ -47,16 +47,46 @@ The order confirmation page reports the customer's own order (`purchase`, with v
 
 ## Requirements
 
-- PrestaShop 1.7 or 8.x (verified on 8.2)
-- PHP 7.2+
-- A Conferbot account with a published chatbot (or use the built-in demo bot to try it first)
+- PrestaShop 1.7 or 8.x (verified on 8.2). The module also installs on PrestaShop 9 (`ps_versions_compliancy` has no upper bound), but 9.x has not been verified yet.
+- PHP 7.2 or later (the module itself; your PrestaShop version may need a newer PHP).
+- A Conferbot account with a published bot ([app.conferbot.com](https://app.conferbot.com)), or the built-in demo bot to try it first.
+- Visitors' browsers load `https://cdn.conferbot.com/dist/v1/widget.min.js` and connect to `wdt.conferbot.com`. If the store sends a Content Security Policy, allow both.
 
 ## Installation
 
-1. Zip the module folder as `conferbot.zip` (the zip must contain a top-level `conferbot/` directory).
-2. In the PrestaShop admin, go to **Modules > Module Manager > Upload a module** and upload the zip.
-   (Or copy the folder to `/modules/conferbot/` and install from Module Manager. CLI: `bin/console prestashop:module install conferbot`.)
-3. Click **Configure**.
+### 1. Get the module zip
+
+- **PrestaShop Addons:** not listed yet (see [MARKETPLACE.md](MARKETPLACE.md)). Once it is, install it from **Modules > Marketplace** and skip to step 3.
+- **GitHub:** download `conferbot-prestashop-v<version>.zip` from the [latest release](https://github.com/Conferbot/conferbot-prestashop/releases/latest).
+- **From a checkout:** the zip must contain a single top-level `conferbot/` folder with `conferbot.php` inside it:
+
+  ```bash
+  git archive --format=zip --prefix=conferbot/ -o conferbot.zip HEAD
+  ```
+
+### 2. Upload it
+
+1. In the PrestaShop back office go to **Modules > Module Manager**.
+2. Click **Upload a module** (top right) and drop the zip on it. PrestaShop installs it straight away and offers **Configure**.
+
+Over FTP/SSH instead: copy the folder to `modules/conferbot/`, then find **Conferbot** in Module Manager and click **Install**. Or from the shop root: `php bin/console prestashop:module install conferbot`.
+
+### 3. Find your Chatbot ID
+
+The Chatbot ID is a 24-character code such as `64a1b2c3d4e5f6a7b8c9d0e1`.
+
+1. Sign in at [app.conferbot.com](https://app.conferbot.com) and open your bot.
+2. Click **Share**, then **Embed into your website**.
+3. The ID is the first value in the code: `window.ConferbotWidget("64a1b2c3d4e5f6a7b8c9d0e1", "live_chat")`. It is also in the browser's address bar: `.../chatbot/64a1b2c3d4e5f6a7b8c9d0e1/embed`.
+
+You can paste the whole embed code or the dashboard URL instead; the module keeps only the ID.
+
+### 4. Turn it on
+
+1. Open the module's **Configure** screen (Module Manager > Conferbot > Configure).
+2. **Step 1:** paste the Chatbot ID.
+3. **Step 2:** turn the chat on.
+4. Click the big save button. The green banner says *Saved! The chat is now live*.
 
 ## Configuration
 
@@ -112,18 +142,38 @@ docker run --rm -v "$PWD":/mod -v /path/to/phpunit-9.phar:/phpunit.phar:ro \
   -w /mod php:8.2-cli php /phpunit.phar
 ```
 
-## Manual verification
+## Check that it works
 
-1. Save the configuration with a valid Chatbot ID (or the demo bot).
-2. Open the storefront - the chat bubble should appear (subject to the bot's own dashboard settings such as disabled URLs and load delay).
-3. Log in as a customer and start a chat: the conversation in the Conferbot inbox should show the customer's name/email and cart context (marked verified when the identity secret is set).
+1. Open the storefront in a private window. The chat bubble appears bottom right (unless the bot's dashboard settings delay it or hide it on that URL).
+2. Click it, start the chat and send a message. It shows up in the Conferbot dashboard under the bot's conversations.
+3. Log in as a customer and chat again: the conversation shows the customer's name, email and cart total (marked verified when the identity secret is set).
 4. Place an order: the order confirmation page reports the purchase once.
+5. To check the code is on the page: view the page source and search for `conferbot-js`. It appears once, in the `<head>`.
+
+## Troubleshooting
+
+| Symptom | Cause and fix |
+|---|---|
+| The upload is refused | The zip must contain a top-level `conferbot/` folder (not the files loose, and not `conferbot-prestashop-main/`). |
+| No `conferbot-js` in the page source | The switch is off, the module is disabled in Module Manager, or the page type is unticked under **Show on these pages**. Then clear the cache: **Advanced Parameters > Performance > Clear cache**, plus any page cache module or CDN. |
+| Still nothing after clearing the cache | The theme does not call the `displayHeader` hook. Check **Design > Positions** for Conferbot under *displayHeader*, and that the theme's `head.tpl` includes `{hook h='displayHeader'}`. |
+| `conferbot-js` is there but no bubble | A Content Security Policy without `cdn.conferbot.com` / `wdt.conferbot.com`, a script blocker, or the bot is unpublished or hides itself on that URL. Check the browser console. |
+| Logged-in customers are unverified | Paste the identity verification secret and make sure it matches the one in your Conferbot workspace. |
+
+Still stuck? Write to support@conferbot.com.
+
+## Uninstall
+
+- **Pause it:** turn the chat off on the configure screen and save. The settings are kept.
+- **Disable:** Module Manager > Conferbot > **Disable**. Nothing is loaded on the store; the settings are kept.
+- **Uninstall:** Module Manager > Conferbot > **Uninstall**. This removes every `CONFERBOT_*` setting, including the identity secret. Then **Delete** removes the files from `modules/conferbot/`.
+
+Your bot and its conversations stay in your Conferbot account.
 
 ## Notes & limitations
 
 - No API key or workspace ID is required - the widget resolves everything server-side from the Chatbot ID over Socket.IO (`wdt.conferbot.com`).
 - Outbound webhooks (order status, product updates, abandoned cart) are **not** part of this version; the Conferbot backend does not yet expose PrestaShop webhook endpoints. See `server/docs/integrations/prestashop-integration-guide.md` for the roadmap.
-- If the widget does not appear: check the module is enabled, the Chatbot ID is correct and the bot is published/not disabled, the current page type is enabled in **Show on these pages**, and clear the PrestaShop cache (**Advanced Parameters > Performance > Clear cache**).
 
 ## License
 
