@@ -2,7 +2,7 @@
 
 ## What gets deployed
 
-A single installable zip (`conferbot-prestashop-v1.3.0.zip`) whose top-level directory is `conferbot/`. No backend changes are required: the module only injects the public widget loader (`https://cdn.conferbot.com/dist/v1/widget.min.js`) and calls `window.ConferbotWidget(botId, embedType, options)`. The widget then talks to the production embed-server (`wdt.conferbot.com`) over Socket.IO, exactly like the snippet from the dashboard's **Share > Embed into website** page.
+A single installable zip (`conferbot-prestashop-v1.3.1.zip`; the same file is attached as `conferbot.zip` for PrestaShop Addons, which wants no version in the name) whose top-level directory is `conferbot/`. No backend changes are required: the module only injects the public widget loader (`https://cdn.conferbot.com/dist/v1/widget.min.js`) and calls `window.ConferbotWidget(botId, embedType, options)`. The widget then talks to the production embed-server (`wdt.conferbot.com`) over Socket.IO, exactly like the snippet from the dashboard's **Share > Embed into website** page.
 
 ## Prerequisites
 
@@ -15,10 +15,11 @@ A single installable zip (`conferbot-prestashop-v1.3.0.zip`) whose top-level dir
 From a clean checkout of this repository, at the release tag:
 
 ```bash
-git archive --format=zip --prefix=conferbot/ -o conferbot-prestashop-v1.3.0.zip v1.3.0
+git archive --format=zip --prefix=conferbot/ -o conferbot-prestashop-v1.3.1.zip v1.3.1
+cp conferbot-prestashop-v1.3.1.zip conferbot.zip   # the Addons upload
 ```
 
-`.gitattributes` keeps `tests/`, `phpunit.xml`, `docs/`, this file and `MARKETPLACE.md` out of the zip. Do not zip the working directory by hand: that would ship `.git` and the test suite.
+`.gitattributes` keeps `tests/`, `phpunit.xml`, `docs/`, this file and `MARKETPLACE.md` out of the zip. The root `.htaccess` (direct PHP access denied, Apache 2.2 and 2.4) is shipped, as Addons requires. Do not zip the working directory by hand: that would ship `.git` and the test suite.
 
 The zip must contain `conferbot/` as its only top-level entry (PrestaShop derives the module name from it).
 
@@ -32,7 +33,7 @@ The zip must contain `conferbot/` as its only top-level entry (PrestaShop derive
 
 **Via CLI (for hosted/managed stores):**
 ```bash
-unzip conferbot-prestashop-v1.3.0.zip -d /var/www/html/modules/
+unzip conferbot-prestashop-v1.3.1.zip -d /var/www/html/modules/
 chown -R www-data:www-data /var/www/html/modules/conferbot
 php bin/console prestashop:module install conferbot
 # set config non-interactively if desired:
@@ -58,7 +59,7 @@ php bin/console cache:clear
 
 ## Versioning / upgrades
 
-Bump `$this->version` in `conferbot.php` AND `<version>` in `config.xml` together. PrestaShop runs upgrade scripts from the `upgrade/` directory (`upgrade-X.Y.Z.php`) when the installed version is older. `upgrade-1.3.0.php` removes the legacy 1.0.x keys and makes sure `displayHeader` is registered, so an in-place upgrade keeps the chat (verified on 8.2: 1.2.0 to 1.3.0 with a leftover 1.0.x key and no hook). Uninstall removes all `CONFERBOT_*` configuration keys (including legacy 1.0.x keys).
+Bump `$this->version` in `conferbot.php` AND `<version>` in `config.xml` together (`tests/ConferbotPackageTest.php` fails if they differ). Keep `ps_versions_compliancy` an explicit range (`'min' => '1.7.0.0', 'max' => '9.99.99'`): Addons refuses `_PS_VERSION_` as the max. PrestaShop runs upgrade scripts from the `upgrade/` directory (`upgrade-X.Y.Z.php`) when the installed version is older. `upgrade-1.3.0.php` removes the legacy 1.0.x keys and makes sure `displayHeader` is registered, so an in-place upgrade keeps the chat (verified on 8.2: 1.2.0 to 1.3.0 with a leftover 1.0.x key and no hook). Uninstall removes all `CONFERBOT_*` configuration keys (including legacy 1.0.x keys).
 
 ## Explicitly out of scope in v1.3.0
 
