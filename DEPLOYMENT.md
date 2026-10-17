@@ -7,7 +7,7 @@ A single installable zip (`conferbot-prestashop-v1.3.0.zip`) whose top-level dir
 ## Prerequisites
 
 - A Conferbot bot that is **published and not disabled**; copy its embed code from **Share > Embed** (the module finds the 24-char Bot ID in it).
-- PrestaShop 1.7 or 8.x, PHP 7.2+.
+- PrestaShop 1.7, 8.x or 9.x (verified on 8.2 and 9.0.3), PHP 7.2+.
 - The store's domain must NOT be listed in the bot's **Customize > Advanced > Disabled URLs** (there is no domain whitelist - any origin may embed a bot; disabled URLs is the only suppression mechanism).
 
 ## Building the zip
