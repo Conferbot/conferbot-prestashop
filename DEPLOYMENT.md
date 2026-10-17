@@ -12,11 +12,13 @@ A single installable zip (`conferbot-prestashop-v1.3.0.zip`) whose top-level dir
 
 ## Building the zip
 
+From a clean checkout of this repository, at the release tag:
+
 ```bash
-cd /path/to/dev
-mkdir -p /tmp/pkg && cp -r prestashop-module /tmp/pkg/conferbot
-cd /tmp/pkg && zip -r conferbot-prestashop-v1.3.0.zip conferbot
+git archive --format=zip --prefix=conferbot/ -o conferbot-prestashop-v1.3.0.zip v1.3.0
 ```
+
+`.gitattributes` keeps `tests/`, `phpunit.xml`, `docs/`, this file and `MARKETPLACE.md` out of the zip. Do not zip the working directory by hand: that would ship `.git` and the test suite.
 
 The zip must contain `conferbot/` as its only top-level entry (PrestaShop derives the module name from it).
 
