@@ -108,6 +108,7 @@ The module class only wires PrestaShop hooks and the configure screen; the logic
 ```
 modules/conferbot/
 ├── conferbot.php                        # Module: hooks + configure screen wiring
+├── .htaccess                            # Denies direct HTTP access to the PHP files (Addons rule)
 ├── classes/
 │   ├── ConferbotBotId.php               # Bot ID extraction/validation + demo bot ID
 │   ├── ConferbotPageResolver.php        # Controller -> page type map + visibility rules
@@ -129,7 +130,7 @@ Adding a setting is a one-file change in `ConferbotSettings` plus a form field i
 
 ## Tests
 
-76 PHPUnit tests (164 assertions, PHP 7.4 and 8.2) cover bot ID parsing, controller-to-page-type mapping, visibility rules, widget option building (guest/customer/cart variants), the identity hash and write-only secret, purchase events, script-injection safety of the inlined JSON, and settings persistence including legacy-key cleanup. The suite runs without a PrestaShop installation - `tests/bootstrap.php` stubs `Configuration`.
+79 PHPUnit tests (173 assertions; PHP 7.4, 8.2 and 8.4) cover bot ID parsing, controller-to-page-type mapping, visibility rules, widget option building (guest/customer/cart variants), the identity hash and write-only secret, purchase events, script-injection safety of the inlined JSON, settings persistence including legacy-key cleanup, and the Addons packaging rules (explicit compatibility range, root `.htaccess`, matching versions in `conferbot.php` and `config.xml`). The suite runs without a PrestaShop installation - `tests/bootstrap.php` stubs `Configuration`.
 
 ```bash
 # any PHP 7.2+ with phpunit 9:
