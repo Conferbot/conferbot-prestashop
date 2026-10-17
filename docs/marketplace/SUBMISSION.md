@@ -1,6 +1,6 @@
 # PrestaShop Addons Marketplace: submission kit
 
-Everything needed to list the Conferbot module (`conferbot` 1.3.0) on PrestaShop Addons. Checked on 2026-10-17 against the current seller guidelines at https://docs.cloud.prestashop.com/ (addons.prestashop.com blocks automated reads; its contributor guides were read from February 2026 snapshots). `MARKETPLACE.md` at the repo root holds the earlier ranking playbook and the French copy.
+Everything needed to list the Conferbot module (`conferbot` 1.3.1) on PrestaShop Addons. Checked on 2026-10-17 against the current seller guidelines at https://docs.cloud.prestashop.com/ (addons.prestashop.com blocks automated reads; its contributor guides were read from February 2026 snapshots). `MARKETPLACE.md` at the repo root holds the earlier ranking playbook and the French copy.
 
 ## 1. Where to submit
 
@@ -26,13 +26,13 @@ This needs an owner decision before anything else here matters.
 
 | Requirement | Status |
 | --- | --- |
-| `conferbot/conferbot.php` in the `conferbot/` folder, zipped as `conferbot.zip` with no version in the name; one module per zip | **Rename at upload.** The release asset is `conferbot-prestashop-v1.3.0.zip`, though its contents (`conferbot/...`) are right. Upload a copy renamed to `conferbot.zip`. |
+| `conferbot/conferbot.php` in the `conferbot/` folder, zipped as `conferbot.zip` with no version in the name; one module per zip | OK. The v1.3.1 release carries `conferbot.zip` (contents `conferbot/...`) next to `conferbot-prestashop-v1.3.1.zip`. |
 | `index.php` in every folder | OK. |
 | `if (!defined('_PS_VERSION_')) exit;` in every PHP file | OK. All class and upgrade files have it; the `index.php` files are the standard redirect stubs. |
-| Root `.htaccess` that denies direct PHP access | **Missing: #11.** |
-| Explicit `ps_versions_compliancy` (never `_PS_VERSION_` as max) | **Fails: #11.** Today it is `'max' => _PS_VERSION_`. |
+| Root `.htaccess` that denies direct PHP access | OK since 1.3.1 (#11): Apache 2.2 and 2.4 blocks from the Addons standard. |
+| Explicit `ps_versions_compliancy` (never `_PS_VERSION_` as max) | OK since 1.3.1 (#11): `'min' => '1.7.0.0', 'max' => '9.99.99'`. |
 | Works on the latest PrestaShop (9.0.x); updates must too (since 1 Feb 2026) | OK. Verified on 8.2 and 9.0.3 (CHANGELOG 1.3.0). |
-| `$this->module_key` from the product sheet | **To do: #11.** It only exists once the product sheet is created. |
+| `$this->module_key` from the product sheet | **TODO (owner), #12.** Only Addons can issue it, once the product sheet exists. Then add `$this->module_key = '<key>';` to `conferbot.php` and release 1.3.2. |
 | Zero errors, warnings or notices in `_PS_MODE_DEV_`; no `serialize`/`eval`; Smarty output escaped; configuration keys prefixed; uninstall cleans up | Believed OK (unit-tested, and the 8.2/9.0.3 runs were clean). Confirm with the validator. |
 | Licence compatible with AFL | OK: AFL-3.0 (`LICENSE.txt`). |
 | No external links or personal contact details in code or docs, and support only through the Addons inbox | **Risk.** The configure page links to the Conferbot dashboard and the demo bot, and PHP headers name `support@conferbot.com`. For a SaaS connector the dashboard link is functional. Tick **"requires an external paid service"** on the product sheet. If moderation objects, drop the support email from the headers. |
@@ -43,7 +43,7 @@ Review: automated checks (instant to 24 hours), then technical review (5–7 wor
 ## 4. Blockers
 
 1. **Free listing needs Official Partner status**, or the owner chooses a paid price. Decide this first.
-2. **#11**: explicit `ps_versions_compliancy`, a root `.htaccess`, and `module_key`, then release 1.3.1 and run validator.prestashop.com.
+2. **TODO: `module_key` (#12).** Addons issues it when the product sheet is created. Put it in `conferbot.php`, release 1.3.2, and run validator.prestashop.com on that zip. The rest of #11 (compatibility range, root `.htaccess`) shipped in 1.3.1.
 3. **Seller account**: company, VAT and tax details, a Stripe EUR account, a director ID check, and €99 a year per product.
 4. Required listing items still missing (see the checklist): a `readme_en.pdf` documentation PDF and a 2–5 minute YouTube setup video.
 
@@ -113,8 +113,9 @@ These are square and at least 1000x1000, the minimum of 3 covering back and fron
 
 - [ ] Decide: Official Partner (free listing), paid at €49.99, or no Addons.
 - [ ] Open the seller account: company and VAT details, Stripe (EUR), director ID, accept the seller terms, pay €99 a year per product.
-- [ ] Create the product sheet with the copy above. Copy the generated `module_key` into #11, fix the rest of #11, release 1.3.1, and get it clean on validator.prestashop.com.
-- [ ] Upload `conferbot.zip` (renamed) with the changelog and supported versions (1.7.0 to 9.0.x).
+- [x] #11: explicit compatibility range and root `.htaccess`, released as 1.3.1.
+- [ ] Create the product sheet with the copy above. Copy the generated `module_key` into #12, release 1.3.2 with it, and get it clean on validator.prestashop.com.
+- [ ] Upload `conferbot.zip` (a release asset) with the changelog and supported versions (1.7.0 to 9.0.x).
 - [ ] Upload the icon, 3 screenshots, `readme_en.pdf` and the YouTube video. Add the FR translation from `MARKETPLACE.md`.
 - [ ] Answer technical and marketing review feedback, and keep to the 1-working-day reply time on the Addons inbox after launch.
 
