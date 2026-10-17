@@ -6,6 +6,7 @@
 - Sales tracking: purchases are reported once per confirmed order, and cart updates are reported; the loader guards against a missing widget.
 - Upgrade script `upgrade-1.3.0.php`: removes the legacy 1.0.x configuration keys and makes sure `displayHeader` is registered, so an in-place upgrade keeps the chat.
 - The bot ID help points to Share > Embed into your website in the Conferbot dashboard, with a plain address-bar hint.
+- The module name no longer shows a double-escaped `&amp;` in the PrestaShop 9 admin.
 
 ## 1.2.0 - 2026-07-15
 
