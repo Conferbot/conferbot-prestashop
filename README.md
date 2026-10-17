@@ -4,11 +4,9 @@ Embeds the [Conferbot](https://conferbot.com) AI chat widget on a PrestaShop sto
 
 ## See it in action
 
-Paste the Chatbot ID, flip the switch, and the bot is live on the storefront - 30 seconds end to end:
+Upload the module, paste the Chatbot ID, flip the switch, and the bot is live on the storefront (recorded on PrestaShop 9.0.3). Click the GIF for the full-size MP4:
 
-![Conferbot PrestaShop demo: paste the bot ID, save, chat appears on the store](docs/demo.gif)
-
-[HD video (MP4)](docs/demo.mp4) - also attached to the [latest release](https://github.com/Conferbot/conferbot-prestashop/releases).
+[![Conferbot on PrestaShop: upload the module, paste the bot ID, save, open the store and chat](docs/media/install.gif)](https://github.com/Conferbot/conferbot-prestashop/releases/download/v1.3.0/install.mp4)
 
 ## How it works
 
@@ -47,7 +45,7 @@ The order confirmation page reports the customer's own order (`purchase`, with v
 
 ## Requirements
 
-- PrestaShop 1.7 or 8.x (verified on 8.2). The module also installs on PrestaShop 9 (`ps_versions_compliancy` has no upper bound), but 9.x has not been verified yet.
+- PrestaShop 1.7, 8.x or 9.x (verified on 8.2 and 9.0.3).
 - PHP 7.2 or later (the module itself; your PrestaShop version may need a newer PHP).
 - A Conferbot account with a published bot ([app.conferbot.com](https://app.conferbot.com)), or the built-in demo bot to try it first.
 - Visitors' browsers load `https://cdn.conferbot.com/dist/v1/widget.min.js` and connect to `wdt.conferbot.com`. If the store sends a Content Security Policy, allow both.
