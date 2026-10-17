@@ -69,7 +69,7 @@ Do not keyword-stuff the title beyond what's there - Addons moderation rejects s
 
 1. **Reviews**: after install, ask happy merchants for an Addons review (in-dashboard prompt after 14 days of usage). Rating count is the strongest organic ranking lever.
 2. **Update cadence**: ship a minor version at least quarterly - "recently updated" is a visible trust signal and a ranking input.
-3. **Compatibility range**: keep `ps_versions_compliancy` max at `_PS_VERSION_` and test each new PS release fast; compatibility filters exclude you from search otherwise.
+3. **Compatibility range**: keep `ps_versions_compliancy` an explicit range (`'max' => '9.99.99'`; Addons refuses `_PS_VERSION_`) and test each new PS release fast; compatibility filters exclude you from search otherwise.
 4. **Free pricing**: list at €0 (the SaaS monetizes the Conferbot subscription). Free modules get far more downloads → velocity → rank.
 5. **Validator-clean**: run https://validator.prestashop.com before every submission; rejections delay listing 1–2 weeks.
 6. **External SEO**: publish `conferbot.com/integrations/prestashop` and an install-guide blog post linking to the Addons page ("prestashop chatbot" is a winnable SERP).
