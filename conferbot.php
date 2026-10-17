@@ -31,10 +31,10 @@ class Conferbot extends Module
     {
         $this->name = 'conferbot';
         $this->tab = 'front_office_features';
-        $this->version = '1.3.0';
+        $this->version = '1.3.1';
         $this->author = 'Conferbot';
         $this->need_instance = 0;
-        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => '9.99.99');
         $this->bootstrap = true;
 
         parent::__construct();
