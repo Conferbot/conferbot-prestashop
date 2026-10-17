@@ -39,7 +39,9 @@ class Conferbot extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Conferbot - AI Chatbot, Live Chat & Customer Support');
+        // l() returns the name HTML-escaped and the admin templates escape it
+        // again ("&amp;amp;" on PrestaShop 9); keep it plain, they escape it once.
+        $this->displayName = html_entity_decode($this->l('Conferbot - AI Chatbot, Live Chat & Customer Support'), ENT_QUOTES, 'UTF-8');
         $this->description = $this->l('Turn visitors into customers with an AI chatbot and live chat widget. Automate 24/7 customer support, capture leads, answer product questions, and hand over to human agents - set up in under a minute with no code.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall Conferbot? Module configuration will be removed.');
 
